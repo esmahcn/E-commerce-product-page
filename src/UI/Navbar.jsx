@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink } from "react-router-dom";
 
 function Navbar({ cartCount, onCartClick }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -18,11 +19,11 @@ function Navbar({ cartCount, onCartClick }) {
 
           {/* Desktop links */}
           <ul className="hidden md:flex space-x-8 text-sm text-gray-500 ml-10">
-            <li className="hover:text-black cursor-pointer">Collections</li>
-            <li className="hover:text-black cursor-pointer">Men</li>
-            <li className="hover:text-black cursor-pointer">Women</li>
-            <li className="hover:text-black cursor-pointer">About</li>
-            <li className="hover:text-black cursor-pointer">Contact</li>
+            <a href="/Collection" className="hover:text-black cursor-pointer">Collections</a>
+            <a href="/Men" className="hover:text-black cursor-pointer">Men</a>
+            <a href="/Women" cclassName="hover:text-black cursor-pointer">Women</a>
+            <a href="/AboutUs" cclassName="hover:text-black cursor-pointer">About</a>
+            <a href="/Contact" cclassName="hover:text-black cursor-pointer">Contact</a>
           </ul>
         </div>
 
