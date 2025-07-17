@@ -1,20 +1,17 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
 import Navbar from "./UI/Navbar";
 import Footer from "./UI/Footer";
+import { Outlet } from "react-router-dom";
+
+
 
 function Layout() {
   return (
     <>
-      {/* Navbar visible on all pages */}
       <Navbar cartCount={0} onCartClick={() => console.log("Cart clicked")} />
-
-      {/* Main content (based on route) */}
-      <main className="min-h-screen">
+      <main>
         <Outlet />
       </main>
-
-      {/* Footer visible on all pages */}
       <Footer />
     </>
   );
