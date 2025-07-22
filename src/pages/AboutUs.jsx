@@ -155,7 +155,7 @@ export default function About() {
           <div className="flex flex-col md:flex-row bg-gray-100 rounded-l shadow-lg overflow-hidden">
             <div className="md:w-1/3 h-72 md:h-auto">
               <img
-                src="/images/WIN_20250722_20_51_04_Pro.jpg"
+                src="/images/men ph.jpg"
                 alt="Customer"
                 className="w-full h-full object-cover"
               />
