@@ -5,8 +5,9 @@ import Home from "./pages/Home"; // ✅ You should create this
 import Collection from "./pages/Collection";
 import Contact from "./pages/Contact";
 import Women from "./pages/Women";
-import Men from "./pages/Men";
+import Shop from "./pages/Shop";
 import AboutUs from "./pages/AboutUs";
+
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         <Route path="/collection" element={<Collection />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/women" element={<Women />} />
-        <Route path="/men" element={<Men />} />
+        <Route path="/Shop" element={<Shop />} />
         <Route path="/aboutus" element={<AboutUs />} />
       </Route>
     </Routes>

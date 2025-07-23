@@ -20,7 +20,7 @@ function Navbar({ cartCount, onCartClick }) {
           {/* Desktop links */}
           <ul className="hidden md:flex space-x-8 text-sm text-gray-500 ml-10">
             <a href="/Collection" className="hover:text-black cursor-pointer">Collections</a>
-            <a href="/Men" className="hover:text-black cursor-pointer">Men</a>
+            <a href="/Shop" className="hover:text-black cursor-pointer">Shop</a>
             <a href="/Women" cclassName="hover:text-black cursor-pointer">Women</a>
             <a href="/AboutUs" cclassName="hover:text-black cursor-pointer">About</a>
             <a href="/Contact" cclassName="hover:text-black cursor-pointer">Contact</a>
