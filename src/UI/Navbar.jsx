@@ -19,10 +19,11 @@ function Navbar({ cartCount, onCartClick }) {
 
           {/* Desktop links */}
           <ul className="hidden md:flex space-x-8 text-sm text-gray-500 ml-10">
-            <a href="/Collection" className="hover:text-black cursor-pointer">Collections</a>
+           
             <a href="/Shop" className="hover:text-black cursor-pointer">Shop</a>
-            <a href="/Women" cclassName="hover:text-black cursor-pointer">Women</a>
-            <a href="/AboutUs" cclassName="hover:text-black cursor-pointer">About</a>
+            <a href="/Home" cclassName="hover:text-black cursor-pointer">Home</a>
+            <a href="/AboutUs" cclassName="hover:text-black cursor-pointer">AboutUs</a>
+              <a href="/Blog" cclassName="hover:text-black cursor-pointer">Blog</a>
             <a href="/Contact" cclassName="hover:text-black cursor-pointer">Contact</a>
           </ul>
         </div>
@@ -56,10 +57,11 @@ function Navbar({ cartCount, onCartClick }) {
               <img src="/images/icon-close.svg" alt="Close" className="w-4 h-4" />
             </button>
             <ul className="space-y-6 text-gray-800 text-base font-semibold">
-              <li className="cursor-pointer">Collections</li>
-              <li className="cursor-pointer">Men</li>
-              <li className="cursor-pointer">Women</li>
+            
+              <li className="cursor-pointer">Home</li>
+              <li className="cursor-pointer">Shop</li>
               <li className="cursor-pointer">About</li>
+                <li className="cursor-pointer">Blog</li>
               <li className="cursor-pointer">Contact</li>
             </ul>
           </div>
