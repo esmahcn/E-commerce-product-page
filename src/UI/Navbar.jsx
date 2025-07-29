@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from "react-router-dom";
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
 
 function Navbar({ cartCount, onCartClick }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,17 +20,21 @@ function Navbar({ cartCount, onCartClick }) {
 
           {/* Desktop links */}
           <ul className="hidden md:flex space-x-8 text-sm text-gray-500 ml-10">
-           
+
             <a href="/Shop" className="hover:text-black cursor-pointer">Shop</a>
             <a href="/Home" cclassName="hover:text-black cursor-pointer">Home</a>
             <a href="/AboutUs" cclassName="hover:text-black cursor-pointer">AboutUs</a>
-              <a href="/Blog" cclassName="hover:text-black cursor-pointer">Blog</a>
+            <a href="/Blog" cclassName="hover:text-black cursor-pointer">Blog</a>
             <a href="/Contact" cclassName="hover:text-black cursor-pointer">Contact</a>
           </ul>
         </div>
 
         {/* Right: Cart + Avatar */}
-        <div className="relative flex items-center space-x-6">
+        <div className="relative flex items-center space-x-6"
+
+
+
+        >
           {/* Cart icon with count */}
           <div className="relative cursor-pointer" onClick={onCartClick}>
             <img src="/images/icon-cart.svg" alt="Cart" className="w-5 h-5 hover:opacity-75" />
@@ -41,11 +46,12 @@ function Navbar({ cartCount, onCartClick }) {
           </div>
 
           {/* Avatar */}
-          <img
-            src="/images/image-avatar.png"
-            alt="Avatar"
-            className="w-10 h-10 rounded-full border-2 border-transparent hover:border-orange-500 cursor-pointer"
-          />
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </div>
       </div>
 
@@ -56,23 +62,23 @@ function Navbar({ cartCount, onCartClick }) {
             <button className="mb-8" onClick={() => setIsMenuOpen(false)}>
               <img src="/images/icon-close.svg" alt="Close" className="w-4 h-4" />
             </button>
-          <ul className="flex flex-col space-y-4 text-gray-700 text-lg font-medium">
-  <li>
-    <a href="/Shop" className="hover:text-black transition-colors duration-200">Shop</a>
-  </li>
-  <li>
-    <a href="/Home" className="hover:text-black transition-colors duration-200">Home</a>
-  </li>
-  <li>
-    <a href="/AboutUs" className="hover:text-black transition-colors duration-200">About Us</a>
-  </li>
-  <li>
-    <a href="/Blog" className="hover:text-black transition-colors duration-200">Blog</a>
-  </li>
-  <li>
-    <a href="/Contact" className="hover:text-black transition-colors duration-200">Contact</a>
-  </li>
-</ul>
+            <ul className="flex flex-col space-y-4 text-gray-700 text-lg font-medium">
+              <li>
+                <a href="/Shop" className="hover:text-black transition-colors duration-200">Shop</a>
+              </li>
+              <li>
+                <a href="/Home" className="hover:text-black transition-colors duration-200">Home</a>
+              </li>
+              <li>
+                <a href="/AboutUs" className="hover:text-black transition-colors duration-200">About Us</a>
+              </li>
+              <li>
+                <a href="/Blog" className="hover:text-black transition-colors duration-200">Blog</a>
+              </li>
+              <li>
+                <a href="/Contact" className="hover:text-black transition-colors duration-200">Contact</a>
+              </li>
+            </ul>
           </div>
 
           {/* Overlay */}
