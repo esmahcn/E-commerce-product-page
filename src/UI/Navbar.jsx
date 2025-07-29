@@ -56,14 +56,23 @@ function Navbar({ cartCount, onCartClick }) {
             <button className="mb-8" onClick={() => setIsMenuOpen(false)}>
               <img src="/images/icon-close.svg" alt="Close" className="w-4 h-4" />
             </button>
-            <ul className="space-y-6 text-gray-800 text-base font-semibold">
-            
-            <a href="/Shop" className="hover:text-black cursor-pointer">Shop</a>
-            <a href="/Home" cclassName="hover:text-black cursor-pointer">Home</a>
-            <a href="/AboutUs" cclassName="hover:text-black cursor-pointer">AboutUs</a>
-              <a href="/Blog" cclassName="hover:text-black cursor-pointer">Blog</a>
-            <a href="/Contact" cclassName="hover:text-black cursor-pointer">Contact</a>
-            </ul>
+          <ul className="flex flex-col space-y-4 text-gray-700 text-lg font-medium">
+  <li>
+    <a href="/Shop" className="hover:text-black transition-colors duration-200">Shop</a>
+  </li>
+  <li>
+    <a href="/Home" className="hover:text-black transition-colors duration-200">Home</a>
+  </li>
+  <li>
+    <a href="/AboutUs" className="hover:text-black transition-colors duration-200">About Us</a>
+  </li>
+  <li>
+    <a href="/Blog" className="hover:text-black transition-colors duration-200">Blog</a>
+  </li>
+  <li>
+    <a href="/Contact" className="hover:text-black transition-colors duration-200">Contact</a>
+  </li>
+</ul>
           </div>
 
           {/* Overlay */}
