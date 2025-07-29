@@ -58,11 +58,11 @@ function Navbar({ cartCount, onCartClick }) {
             </button>
             <ul className="space-y-6 text-gray-800 text-base font-semibold">
             
-              <li className="cursor-pointer">Home</li>
-              <li className="cursor-pointer">Shop</li>
-              <li className="cursor-pointer">About</li>
-                <li className="cursor-pointer">Blog</li>
-              <li className="cursor-pointer">Contact</li>
+            <a href="/Shop" className="hover:text-black cursor-pointer">Shop</a>
+            <a href="/Home" cclassName="hover:text-black cursor-pointer">Home</a>
+            <a href="/AboutUs" cclassName="hover:text-black cursor-pointer">AboutUs</a>
+              <a href="/Blog" cclassName="hover:text-black cursor-pointer">Blog</a>
+            <a href="/Contact" cclassName="hover:text-black cursor-pointer">Contact</a>
             </ul>
           </div>
 
