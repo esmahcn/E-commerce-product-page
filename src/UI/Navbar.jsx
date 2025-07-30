@@ -22,10 +22,10 @@ function Navbar({ cartCount, onCartClick }) {
           <ul className="hidden md:flex space-x-8 text-sm text-gray-500 ml-10">
 
             <a href="/Shop" className="hover:text-black cursor-pointer">Shop</a>
-            <a href="/Home" cclassName="hover:text-black cursor-pointer">Home</a>
-            <a href="/AboutUs" cclassName="hover:text-black cursor-pointer">AboutUs</a>
-            <a href="/Blog" cclassName="hover:text-black cursor-pointer">Blog</a>
-            <a href="/Contact" cclassName="hover:text-black cursor-pointer">Contact</a>
+            <a href="/Home" className="hover:text-black cursor-pointer">Home</a>
+            <a href="/AboutUs" className="hover:text-black cursor-pointer">AboutUs</a>
+            <a href="/Blog" className="hover:text-black cursor-pointer">Blog</a>
+            <a href="/Contact" className="hover:text-black cursor-pointer">Contact</a>
           </ul>
         </div>
 

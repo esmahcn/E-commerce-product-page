@@ -1,188 +1,86 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { AiOutlineBars } from "react-icons/ai";
 import { TiThLargeOutline } from "react-icons/ti";
 import { HiOutlineChevronRight } from "react-icons/hi";
 
-const categories = ["All", "Men", "Women", "Kids"];
-const brands = ["Nike", "Adidas", "Puma"];
-const sizes = ["38", "39", "40", "41", "42"];
-const origins = ["Made in USA", "Made in France", "Made in China"];
+const allowedCategories = ["mens-shoes", "womens-shoes"];
+const brands = ["Apple", "Samsung", "Huawei", "Dell"];
 
-const products = [
-  {
-    id: 1,
-    name: "Jordan Sneaker",
-    price: 120,
-    category: "Men",
-    brand: "Nike",
-    size: "40",
-    origin: "Made in USA",
-    image: "/images/jor.jpg",
-    onSale: true,
-    rating: 4.5,
-  },
-  {
-    id: 2,
-    name: "Sneakers",
-    price: 140,
-    category: "Women",
-    brand: "Adidas",
-    size: "38",
-    origin: "Made in France",
-    image: "/images/sn.jpg",
-    rating: 4.2,
-  },
-  {
-    id: 3,
-    name: "Loafers",
-    price: 110,
-    category: "Kids",
-    brand: "Puma",
-    size: "39",
-    origin: "Made in China",
-    image: "/images/loafers.jpg",
-    rating: 3.8,
-  },
-   {
-    id: 1,
-    name: "Jordan Sneaker",
-    price: 120,
-    category: "Men",
-    brand: "Nike",
-    size: "40",
-    origin: "Made in USA",
-    image: "/images/jor.jpg",
-    onSale: true,
-    rating: 4.5,
-  },
-  {
-    id: 4,
-    name: "Moccasins",
-    price: 110,
-    category: "Kids",
-    brand: "Puma",
-    size: "39",
-    origin: "Made in China",
-    image: "/images/moca.jpg",
-    onSale: true,
-    rating: 4.0,
-  },
-  {
-    id: 5,
-    name: "Boots",
-    price: 110,
-    category: "Kids",
-    brand: "Puma",
-    size: "39",
-    origin: "Made in China",
-    image: "/images/boots.jpg",
-    onSale: true,
-    rating: 4.3,
-  },
-  {
-    id: 6,
-    name: "Sandales",
-    price: 110,
-    category: "Kids",
-    brand: "Puma",
-    size: "39",
-    origin: "Made in China",
-    image: "/images/sandales.jpg",
-    rating: 3.9,
-  },
-  {
-    id: 7,
-    name: "Heels",
-    price: 110,
-    category: "Kids",
-    brand: "Puma",
-    size: "39",
-    origin: "Made in China",
-    image: "/images/loafers.jpg",
-    rating: 4.1,
-  },
-  {
-    id: 8,
-    name: "Flats",
-    price: 110,
-    category: "Kids",
-    brand: "Puma",
-    size: "39",
-    origin: "Made in China",
-    image: "/images/flag.jpg",
-    onSale: true,
-    rating: 4.4,
-  },
-  {
-    id: 9,
-    name: "Oxfords",
-    price: 110,
-    category: "Kids",
-    brand: "Puma",
-    size: "39",
-    origin: "Made in China",
-    image: "/images/oxf.jpg",
-    rating: 3.7,
-  },
-  {
-    id: 10,
-    name: "Brogues",
-    price: 110,
-    category: "Kids",
-    brand: "Puma",
-    size: "39",
-    origin: "Made in China",
-    image: "/images/brog.jpg",
-    onSale: true,
-    rating: 4.2,
-  },
-   {
-    id: 9,
-    name: "Oxfords",
-    price: 110,
-    category: "Kids",
-    brand: "Puma",
-    size: "39",
-    origin: "Made in China",
-    image: "/images/oxf.jpg",
-    rating: 3.7,
-  },
-];
+const categorizeProduct = (product) => {
+  const cat = product.category.toLowerCase();
+  const title = product.title.toLowerCase();
+
+  // Only consider shoes with men or women keyword
+  const isShoe =
+    cat.includes("shoe") ||
+    title.includes("shoe") ||
+    title.includes("sneaker") ||
+    title.includes("boot") ||
+    title.includes("trainer");
+
+  if (!isShoe) return "other";
+
+  if ((cat.includes("men") || title.includes("men"))) return "mens-shoes";
+  if ((cat.includes("women") || title.includes("women"))) return "womens-shoes";
+
+  return "other";
+};
 
 export default function Shop() {
-  const [filters, setFilters] = useState({
-    category: "All",
-    brand: "",
-    size: "",
-    origin: "",
-  });
+  const [products, setProducts] = useState([]);
+  const [filters, setFilters] = useState({ category: "All", brand: "" });
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("default");
   const [itemsPerPage, setItemsPerPage] = useState(12);
   const [currentPage, setCurrentPage] = useState(1);
-  const [maxPrice, setMaxPrice] = useState(300);
+  const [maxPrice, setMaxPrice] = useState(1000);
 
   const handleFilterChange = (type, value) => {
     setFilters((prev) => ({
       ...prev,
-      [type]: prev[type] === value ? "" : value,
+      [type]: prev[type] === value ? (type === "category" ? "All" : "") : value,
     }));
     setCurrentPage(1);
   };
 
+  useEffect(() => {
+    Promise.all([
+      fetch("https://dummyjson.com/products/category/mens-shoes").then((res) =>
+        res.json()
+      ),
+      fetch("https://dummyjson.com/products/category/womens-shoes").then(
+        (res) => res.json()
+      ),
+    ])
+      .then(([mensShoesData, womensShoesData]) => {
+        const combinedProducts = [...mensShoesData.products, ...womensShoesData.products]
+          .map((p) => ({
+            ...p,
+            category: categorizeProduct(p),
+            onSale: Math.random() > 0.7,
+          }))
+          .filter((p) => allowedCategories.includes(p.category));
+
+        setProducts(combinedProducts);
+        console.log("Products after categorization:", combinedProducts);
+        console.log("Categories found:", [...new Set(combinedProducts.map(p => p.category))]);
+      })
+      .catch((err) => console.error("Error fetching products:", err));
+  }, []);
+
   const filteredProducts = useMemo(() => {
-    return products.filter((p) => {
-      const { category, brand, size, origin } = filters;
-      return (
-        (category === "All" || p.category === category) &&
-        (!brand || p.brand === brand) &&
-        (!size || p.size === size) &&
-        (!origin || p.origin === origin) &&
-        p.price <= maxPrice &&
-        p.name.toLowerCase().includes(search.toLowerCase())
-      );
+    const filtered = products.filter((p) => {
+      if (filters.category !== "All" && p.category !== filters.category) return false;
+      if (filters.brand && p.brand !== filters.brand) return false;
+      if (p.price > maxPrice) return false;
+      if (!p.title.toLowerCase().includes(search.toLowerCase())) return false;
+      return true;
     });
-  }, [filters, search, maxPrice]);
+
+    console.log("Current filters:", filters);
+    console.log("Filtered products count:", filtered.length);
+    return filtered;
+  }, [products, filters, maxPrice, search]);
 
   const sortedProducts = useMemo(() => {
     if (sortBy === "low") return [...filteredProducts].sort((a, b) => a.price - b.price);
@@ -192,165 +90,70 @@ export default function Shop() {
 
   const totalItems = sortedProducts.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-
   const paginatedProducts = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return sortedProducts.slice(startIndex, startIndex + itemsPerPage);
+    const start = (currentPage - 1) * itemsPerPage;
+    return sortedProducts.slice(start, start + itemsPerPage);
   }, [sortedProducts, currentPage, itemsPerPage]);
 
   return (
     <div className="font-sans">
+      {/* Header */}
       <div
         className="h-[60vh] bg-cover bg-center relative flex items-center justify-center"
         style={{ backgroundImage: "url('/images/adidas-5400466_1280.jpg')" }}
       >
         <div className="absolute inset-0 bg-black opacity-30" />
         <h1 className="text-5xl font-bold text-gray">SHOP</h1>
-                <p className="text-gray mt-6">Home / Shop</p>
+        <p className="text-gray mt-6">Home / Shop</p>
       </div>
 
+      {/* Main */}
       <div className="flex flex-col md:flex-row px-6 md:px-16 py-12 gap-10">
         {/* Sidebar */}
         <aside className="w-full lg:w-1/4 space-y-8">
           <div>
-            <h2 className="text-xl font-semibold mb-3 border-b border-gray-300 pb-2">Product Categories</h2>
+            <h2 className="text-xl font-semibold mb-3 border-b border-gray-300 pb-2">
+              Product Categories
+            </h2>
             <ul className="space-y-2 text-gray-600">
-              <li className="flex justify-between items-center hover:text-orange-500 cursor-pointer">
-                <span>Men's Shoes</span>
-                <HiOutlineChevronRight />
-              </li>
-              <li className="flex justify-between items-center hover:text-orange-500 cursor-pointer">
-                <span>Women's Shoes</span>
-                <HiOutlineChevronRight />
-              </li>
-              <li className="flex justify-between items-center hover:text-orange-500 cursor-pointer">
-                <span>Kid's Shoes</span>
-                <HiOutlineChevronRight />
-              </li>
-              <li className="flex justify-between items-center hover:text-orange-500 cursor-pointer">
-                <span>Shop by Sport</span>
-                <HiOutlineChevronRight />
-              </li>
+              {["All", ...allowedCategories].map((cat) => (
+                <li
+                  key={cat}
+                  onClick={() => handleFilterChange("category", cat)}
+                  className={`flex justify-between items-center cursor-pointer hover:text-orange-500 ${
+                    filters.category === cat ? "text-orange-500 font-bold" : ""
+                  }`}
+                >
+                  <span>{cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
+                  <HiOutlineChevronRight />
+                </li>
+              ))}
             </ul>
-          </div>
-
-          <div className="my-6">
-            <h3 className="text-md font-semibold mb-2">Price</h3>
-            <div className="flex items-center space-x-4">
-              <input
-                type="range"
-                min={0}
-                max={500}
-                step={10}
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(Number(e.target.value))}
-                className="w-full accent-orange-500"
-              />
-              <span className="text-sm font-medium text-gray-700">${maxPrice}</span>
-            </div>
           </div>
 
           <div>
-            <h2 className="text-xl font-semibold mb-3 border-b border-gray-300 pb-2">Brands</h2>
-            <ul className="space-y-1 text-gray-600">
-              <li>Nike Air Max</li>
-              <li>Adidas Superstar</li>
-              <li>Jordan Retro</li>
+            <h2 className="text-xl font-semibold mb-3 border-b border-gray-300 pb-2">
+              Brands
+            </h2>
+            <ul className="space-y-2 text-gray-600">
+              {brands.map((brand) => (
+                <li
+                  key={brand}
+                  onClick={() => handleFilterChange("brand", brand)}
+                  className={`cursor-pointer hover:text-orange-500 ${
+                    filters.brand === brand ? "text-orange-500 font-bold" : ""
+                  }`}
+                >
+                  {brand}
+                </li>
+              ))}
             </ul>
           </div>
-
-
-
-
-            <div>
-                        <h2 className="text-xl font-semibold mb-3 border-b border-gray-300 pb-2">Dimensions</h2>
-                        <ul className="space-y-2 text-gray-600">
-                            <li className="flex items-center gap-2">
-                                <input type="checkbox" className="accent-orange-500 w-4 h-4" />
-                                <span>40×60CM (6)</span>
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <input type="checkbox" className="accent-orange-500 w-4 h-4" />
-                                <span>60×90CM (8)</span>
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <input type="checkbox" className="accent-orange-500 w-4 h-4" />
-                                <span>80×120CM (3)</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h2 className="text-xl font-semibold mb-3 border-b border-gray-300 pb-2">Made In</h2>
-                        <ul className="space-y-1 text-gray-600">
-                            <li className="flex items-center gap-2">
-                                <input type="checkbox" className="accent-orange-500 w-4 h-4" />
-                                <span>Germany</span>
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <input type="checkbox" className="accent-orange-500 w-4 h-4" />
-                                <span>Japan</span>
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <input type="checkbox" className="accent-orange-500 w-4 h-4" />
-                                <span>Taiwan</span>
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <input type="checkbox" className="accent-orange-500 w-4 h-4" />
-                                <span>USA</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h2 className="text-xl font-semibold mb-3 border-b border-gray-300 pb-2">Sizes</h2>
-                        <ul className="space-y-1 text-gray-600">
-                            <li className="flex items-center gap-2">
-                                <input type="checkbox" className="accent-orange-500 w-4 h-4" />
-                                <span>S</span>
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <input type="checkbox" className="accent-orange-500 w-4 h-4" />
-                                <span>M</span>
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <input type="checkbox" className="accent-orange-500 w-4 h-4" />
-                                <span>L</span>
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <input type="checkbox" className="accent-orange-500 w-4 h-4" />
-                                <span>XL</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h2 className="text-xl font-semibold mb-3 border-b border-gray-300 pb-2">Model</h2>
-                        <ul className="space-y-1 text-gray-600">
-                            <li className="flex items-center gap-2">
-                                <input type="checkbox" className="accent-orange-500 w-4 h-4" />
-                                <span>2021 (5)</span>
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <input type="checkbox" className="accent-orange-500 w-4 h-4" />
-                                <span>2022 (6)</span>
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <input type="checkbox" className="accent-orange-500 w-4 h-4" />
-                                <span>2023 (3)</span>
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <input type="checkbox" className="accent-orange-500 w-4 h-4" />
-                                <span>2024 (8)</span>
-                            </li>
-                        </ul>
-                    </div>
-             
-
-
-          {/* Add other filters here as needed */}
         </aside>
 
-        {/* Products Section */}
+        {/* Products */}
         <section className="flex-1">
-          {/* Sorting and view header */}
+          {/* Sorting and pagination */}
           <div className="flex justify-between items-center text-sm text-gray-600 border border-gray-300 rounded-full py-3 px-4 mb-6">
             <div className="flex items-center space-x-4">
               <button className="w-9 h-9 flex items-center justify-center">
@@ -360,10 +163,17 @@ export default function Shop() {
                 <AiOutlineBars className="text-xl" />
               </button>
             </div>
+
             <p className="text-gray-500">
-              Showing <span className="font-medium text-black">{totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}</span>–
-              <span className="font-medium text-black">{Math.min(currentPage * itemsPerPage, totalItems)}</span> of{" "}
-              <span className="font-medium text-black">{totalItems}</span> item(s)
+              Showing{" "}
+              <span className="font-medium text-black">
+                {totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}
+              </span>
+              –{" "}
+              <span className="font-medium text-black">
+                {Math.min(currentPage * itemsPerPage, totalItems)}
+              </span>{" "}
+              of <span className="font-medium text-black">{totalItems}</span> item(s)
             </p>
 
             <div className="flex items-center gap-4">
@@ -391,10 +201,12 @@ export default function Shop() {
             </div>
           </div>
 
-          {/* Product grid */}
+          {/* Products Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-10">
             {paginatedProducts.length === 0 ? (
-              <p className="col-span-full text-center text-gray-500">No products match your filters.</p>
+              <p className="col-span-full text-center text-gray-500">
+                No products match your filters.
+              </p>
             ) : (
               paginatedProducts.map((product) => (
                 <div
@@ -402,7 +214,6 @@ export default function Shop() {
                   className="rounded-xl overflow-hidden shadow hover:shadow-xl hover:scale-[1.02] transition bg-white"
                 >
                   <div className="relative w-full h-64 bg-gray-100 flex items-center justify-center">
-                    {/* Sale badge */}
                     {product.onSale && (
                       <span className="absolute top-2 left-2 bg-orange-100 text-orange-600 text-xs font-bold px-2 py-1 rounded">
                         SALE
@@ -410,20 +221,18 @@ export default function Shop() {
                     )}
 
                     <img
-                      src={product.image}
-                      alt={product.name}
+                      src={product.thumbnail || product.image}
+                      alt={product.title}
                       className="max-h-full max-w-full object-contain"
                     />
                   </div>
 
                   <div className="flex justify-between items-start p-4">
-                    {/* Left: Name + Price */}
                     <div className="text-left">
-                      <h3 className="text-lg font-semibold">{product.name}</h3>
+                      <h3 className="text-lg font-semibold">{product.title}</h3>
                       <p className="text-gray-600">${product.price}</p>
                     </div>
 
-                    {/* Right: Star + Rating */}
                     <div className="flex items-center space-x-1">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -439,6 +248,27 @@ export default function Shop() {
                 </div>
               ))
             )}
+          </div>
+
+          {/* Pagination */}
+          <div className="flex justify-center mt-8 gap-4">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1 border rounded disabled:opacity-50"
+            >
+              Prev
+            </button>
+            <span className="px-3 py-1 border rounded">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 border rounded disabled:opacity-50"
+            >
+              Next
+            </button>
           </div>
         </section>
       </div>
