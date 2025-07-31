@@ -1,29 +1,13 @@
 import React, { useState, useEffect, useMemo } from "react";
+import axios from "axios";
 import { AiOutlineBars } from "react-icons/ai";
 import { TiThLargeOutline } from "react-icons/ti";
 import { HiOutlineChevronRight } from "react-icons/hi";
 
 const allowedCategories = ["mens-shoes", "womens-shoes"];
-const brands = ["Apple", "Samsung", "Huawei", "Dell"];
-
-const categorizeProduct = (product) => {
-  const cat = product.category.toLowerCase();
-  const title = product.title.toLowerCase();
-
-  // Only consider shoes with men or women keyword
-  const isShoe =
-    cat.includes("shoe") ||
-    title.includes("shoe") ||
-    title.includes("sneaker") ||
-    title.includes("boot") ||
-    title.includes("trainer");
-
-  if (!isShoe) return "other";
-
-  if ((cat.includes("men") || title.includes("men"))) return "mens-shoes";
-  if ((cat.includes("women") || title.includes("women"))) return "womens-shoes";
-
-  return "other";
+const categoryLabels = {
+  "mens-shoes": "Men's Shoes",
+  "womens-shoes": "Women's Shoes",
 };
 
 export default function Shop() {
@@ -44,42 +28,41 @@ export default function Shop() {
   };
 
   useEffect(() => {
-    Promise.all([
-      fetch("https://dummyjson.com/products/category/mens-shoes").then((res) =>
-        res.json()
-      ),
-      fetch("https://dummyjson.com/products/category/womens-shoes").then(
-        (res) => res.json()
-      ),
-    ])
-      .then(([mensShoesData, womensShoesData]) => {
-        const combinedProducts = [...mensShoesData.products, ...womensShoesData.products]
+    const fetchProducts = async () => {
+      try {
+        const [mensRes, womensRes] = await Promise.all([
+          axios.get("https://dummyjson.com/products/category/mens-shoes"),
+          axios.get("https://dummyjson.com/products/category/womens-shoes"),
+        ]);
+
+        const combinedProducts = [...mensRes.data.products, ...womensRes.data.products]
           .map((p) => ({
             ...p,
-            category: categorizeProduct(p),
             onSale: Math.random() > 0.7,
           }))
           .filter((p) => allowedCategories.includes(p.category));
 
         setProducts(combinedProducts);
-        console.log("Products after categorization:", combinedProducts);
-        console.log("Categories found:", [...new Set(combinedProducts.map(p => p.category))]);
-      })
-      .catch((err) => console.error("Error fetching products:", err));
+      } catch (err) {
+        console.error("Error fetching products:", err);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
+  const allBrands = useMemo(() => {
+    return [...new Set(products.map((p) => p.brand))];
+  }, [products]);
+
   const filteredProducts = useMemo(() => {
-    const filtered = products.filter((p) => {
+    return products.filter((p) => {
       if (filters.category !== "All" && p.category !== filters.category) return false;
       if (filters.brand && p.brand !== filters.brand) return false;
       if (p.price > maxPrice) return false;
       if (!p.title.toLowerCase().includes(search.toLowerCase())) return false;
       return true;
     });
-
-    console.log("Current filters:", filters);
-    console.log("Filtered products count:", filtered.length);
-    return filtered;
   }, [products, filters, maxPrice, search]);
 
   const sortedProducts = useMemo(() => {
@@ -99,12 +82,12 @@ export default function Shop() {
     <div className="font-sans">
       {/* Header */}
       <div
-        className="h-[60vh] bg-cover bg-center relative flex items-center justify-center"
+        className="h-[60vh] bg-cover bg-center relative flex flex-col items-center justify-center"
         style={{ backgroundImage: "url('/images/adidas-5400466_1280.jpg')" }}
       >
         <div className="absolute inset-0 bg-black opacity-30" />
-        <h1 className="text-5xl font-bold text-gray">SHOP</h1>
-        <p className="text-gray mt-6">Home / Shop</p>
+        <h1 className="text-5xl font-bold text-white z-10">SHOP</h1>
+        <p className="text-gray-100 mt-6 z-10">Home / Shop</p>
       </div>
 
       {/* Main */}
@@ -124,7 +107,7 @@ export default function Shop() {
                     filters.category === cat ? "text-orange-500 font-bold" : ""
                   }`}
                 >
-                  <span>{cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
+                  <span>{cat === "All" ? "All" : categoryLabels[cat]}</span>
                   <HiOutlineChevronRight />
                 </li>
               ))}
@@ -136,7 +119,7 @@ export default function Shop() {
               Brands
             </h2>
             <ul className="space-y-2 text-gray-600">
-              {brands.map((brand) => (
+              {allBrands.map((brand) => (
                 <li
                   key={brand}
                   onClick={() => handleFilterChange("brand", brand)}
@@ -153,8 +136,8 @@ export default function Shop() {
 
         {/* Products */}
         <section className="flex-1">
-          {/* Sorting and pagination */}
-          <div className="flex justify-between items-center text-sm text-gray-600 border border-gray-300 rounded-full py-3 px-4 mb-6">
+          {/* Filter bar */}
+          <div className="flex flex-wrap justify-between items-center gap-4 text-sm text-gray-600 border border-gray-300 rounded-full py-3 px-4 mb-6">
             <div className="flex items-center space-x-4">
               <button className="w-9 h-9 flex items-center justify-center">
                 <TiThLargeOutline className="text-xl text-orange-500" />
@@ -163,6 +146,14 @@ export default function Shop() {
                 <AiOutlineBars className="text-xl" />
               </button>
             </div>
+
+            <input
+              type="text"
+              placeholder="Search products..."
+              className="px-4 py-1 border rounded-full"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
 
             <p className="text-gray-500">
               Showing{" "}
@@ -219,7 +210,6 @@ export default function Shop() {
                         SALE
                       </span>
                     )}
-
                     <img
                       src={product.thumbnail || product.image}
                       alt={product.title}
