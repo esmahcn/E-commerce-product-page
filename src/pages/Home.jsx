@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ProductGallery from "../components/ProductGallery";
-import ProductInfo from "../components/ProductInfo";
+import ProductGallery from "../components/Products/ProductGallery";
+import ProductInfo from "../components/Products/ProductInfo";
 import QuantityControl from "../components/QuantityControl";
 import AddToCartButton from "../components/AddToCartButton";
 
