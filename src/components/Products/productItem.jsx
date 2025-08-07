@@ -1,22 +1,30 @@
+import { Link } from "react-router-dom";
+
 const ProductItem = ({ product }) => {
   return (
     <div className="rounded-xl overflow-hidden shadow hover:shadow-xl hover:scale-[1.02] transition bg-white">
-      <div className="relative w-full h-64 bg-gray-100 flex items-center justify-center">
-        {product.onSale && (
-          <span className="absolute top-2 left-2 bg-orange-100 text-orange-600 text-xs font-bold px-2 py-1 rounded">
-            SALE
-          </span>
-        )}
-        <img
-          src={product.thumbnail || product.image}
-          alt={product.title}
-          className="max-h-full max-w-full object-contain"
-        />
-      </div>
+      <Link to={`/product/${product.id}`} className="block">
+        <div className="relative w-full h-64 bg-gray-100 flex items-center justify-center">
+          {product.onSale && (
+            <span className="absolute top-2 left-2 bg-orange-100 text-orange-600 text-xs font-bold px-2 py-1 rounded">
+              SALE
+            </span>
+          )}
+          <img
+            src={product.thumbnail || product.image}
+            alt={product.title}
+            className="max-h-full max-w-full object-contain"
+          />
+        </div>
+      </Link>
 
       <div className="flex justify-between items-start p-4">
         <div className="text-left">
-          <h3 className="text-lg font-semibold">{product.title}</h3>
+          <Link to={`/product/${product.id}`}>
+            <h3 className="text-lg font-semibold hover:underline">
+              {product.title}
+            </h3>
+          </Link>
           <p className="text-gray-600">${product.price}</p>
         </div>
 

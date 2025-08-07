@@ -9,6 +9,7 @@ import Blog from "./pages/Blog";
 import Shop from "./pages/Shop";
 import AboutUs from "./pages/AboutUs";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ProductDetails from "./pages/ProductDetails";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
     
         <Route path="/Shop" element={<ProtectedRoute>{<Shop />}</ProtectedRoute>} />
         <Route path="/aboutus" element={<AboutUs />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
       </Route>
     </Routes>
   );
