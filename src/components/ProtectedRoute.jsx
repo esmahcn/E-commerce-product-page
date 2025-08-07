@@ -4,12 +4,11 @@ import React from "react";
 export default function ProtectedRoute({ children }) {
     return (
         <>
-         <SignedIn> {children}
-            <UserButton/>
-         </SignedIn>
+            <SignedIn> {children}
+            </SignedIn>
             <SignedOut>
-        <RedirectToSignIn />
-      </SignedOut>
+                <RedirectToSignIn />
+            </SignedOut>
         </>
     );
 }

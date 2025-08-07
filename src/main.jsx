@@ -12,6 +12,6 @@ createRoot(document.getElementById('root')).render(
     <ClerkProvider publishableKey={SECRETS.CLERK_PUBLISHABLE_KEY}>
       <App />
     </ClerkProvider>
-  </StrictMode>,
+  </StrictMode>
   </BrowserRouter>
 )
