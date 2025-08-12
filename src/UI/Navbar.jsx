@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { NavLink } from "react-router-dom";
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 
 function Navbar({ cartCount, onCartClick }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const activeClass = "text-black font-bold";
+  const normalClass = "hover:text-black cursor-pointer";
 
   return (
     <nav className="bg-white border-b border-gray-200 shadow-sm z-50 relative">
@@ -20,21 +23,41 @@ function Navbar({ cartCount, onCartClick }) {
 
           {/* Desktop links */}
           <ul className="hidden md:flex space-x-8 text-sm text-gray-500 ml-10">
-
-            <a href="/Shop" className="hover:text-black cursor-pointer">Shop</a>
-            <a href="/Home" className="hover:text-black cursor-pointer">Home</a>
-            <a href="/AboutUs" className="hover:text-black cursor-pointer">AboutUs</a>
-            <a href="/Blog" className="hover:text-black cursor-pointer">Blog</a>
-            <a href="/Contact" className="hover:text-black cursor-pointer">Contact</a>
+            <NavLink
+              to="/shop"
+              className={({ isActive }) => (isActive ? activeClass : normalClass)}
+            >
+              Shop
+            </NavLink>
+            <NavLink
+              to="/"
+              className={({ isActive }) => (isActive ? activeClass : normalClass)}
+            >
+              Home
+            </NavLink>
+            <NavLink
+              to="/aboutus"
+              className={({ isActive }) => (isActive ? activeClass : normalClass)}
+            >
+              About Us
+            </NavLink>
+            <NavLink
+              to="/blog"
+              className={({ isActive }) => (isActive ? activeClass : normalClass)}
+            >
+              Blog
+            </NavLink>
+            <NavLink
+              to="/contact"
+              className={({ isActive }) => (isActive ? activeClass : normalClass)}
+            >
+              Contact
+            </NavLink>
           </ul>
         </div>
 
         {/* Right: Cart + Avatar */}
-        <div className="relative flex items-center space-x-6"
-
-
-
-        >
+        <div className="relative flex items-center space-x-6">
           {/* Cart icon with count */}
           <div className="relative cursor-pointer" onClick={onCartClick}>
             <img src="/images/icon-cart.svg" alt="Cart" className="w-5 h-5 hover:opacity-75" />
@@ -64,19 +87,49 @@ function Navbar({ cartCount, onCartClick }) {
             </button>
             <ul className="flex flex-col space-y-4 text-gray-700 text-lg font-medium">
               <li>
-                <a href="/Shop" className="hover:text-black transition-colors duration-200">Shop</a>
+                <NavLink
+                  to="/shop"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={({ isActive }) => (isActive ? activeClass : normalClass)}
+                >
+                  Shop
+                </NavLink>
               </li>
               <li>
-                <a href="/Home" className="hover:text-black transition-colors duration-200">Home</a>
+                <NavLink
+                  to="/"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={({ isActive }) => (isActive ? activeClass : normalClass)}
+                >
+                  Home
+                </NavLink>
               </li>
               <li>
-                <a href="/AboutUs" className="hover:text-black transition-colors duration-200">About Us</a>
+                <NavLink
+                  to="/aboutus"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={({ isActive }) => (isActive ? activeClass : normalClass)}
+                >
+                  About Us
+                </NavLink>
               </li>
               <li>
-                <a href="/Blog" className="hover:text-black transition-colors duration-200">Blog</a>
+                <NavLink
+                  to="/blog"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={({ isActive }) => (isActive ? activeClass : normalClass)}
+                >
+                  Blog
+                </NavLink>
               </li>
               <li>
-                <a href="/Contact" className="hover:text-black transition-colors duration-200">Contact</a>
+                <NavLink
+                  to="/contact"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={({ isActive }) => (isActive ? activeClass : normalClass)}
+                >
+                  Contact
+                </NavLink>
               </li>
             </ul>
           </div>

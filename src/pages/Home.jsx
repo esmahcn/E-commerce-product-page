@@ -1,44 +1,45 @@
 import React, { useState } from "react";
-import ProductGallery from "../components/Products/ProductGallery";
-import ProductInfo from "../components/Products/ProductInfo";
-import QuantityControl from "../components/QuantityControl";
-import AddToCartButton from "../components/AddToCartButton";
+import HeroSection from "../components/HeroSection";
+import TrendingProducts from "../components/TrendingProducts";
+import NewCollections from "../components/NewCollections";
+import BestSellers from "../components/BestSellers";
+import ProductPage from "../components/ProductPage"; // <-- new detailed view
+import useProducts from "../hook/useProducts";
+import WhyChooseUs from "../components/WhyChooseUs";
+import LatestBlogPosts from "../components/LatestBlogPosts";
+export default function Home() {
+  const { products, loading, error } = useProducts();
 
-const productImages = [
-  { big: '/images/image-product-1.jpg', thumb: '/images/image-product-1-thumbnail.jpg' },
-  { big: '/images/image-product-2.jpg', thumb: '/images/image-product-2-thumbnail.jpg' },
-  { big: '/images/image-product-3.jpg', thumb: '/images/image-product-3-thumbnail.jpg' },
-  { big: '/images/image-product-4.jpg', thumb: '/images/image-product-4-thumbnail.jpg' },
-];
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-function Home() {
-  const [mainImage, setMainImage] = useState(productImages[0].big);
-  const [quantity, setQuantity] = useState(1);
-  const [cartCount, setCartCount] = useState(0);
+  if (loading) {
+    return <p className="text-center mt-10">Loading products...</p>;
+  }
+  if (error) {
+    return <p className="text-center mt-10 text-red-500">{error}</p>;
+  }
 
-  const handleDecrease = () => setQuantity(q => Math.max(1, q - 1));
-  const handleIncrease = () => setQuantity(q => q + 1);
-
-  const handleAddToCart = () => {
-    setCartCount(c => c + quantity);
-    setQuantity(1);
-  };
+  const trending = products.slice(0, 4);
+  const newCollections = products.slice(4, 12);
+  const bestSellers = [...products]
+    .sort((a, b) => b.rating - a.rating)
+    .slice(0, 6);
 
   return (
-    <main className="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
-      {/* Left: Product Gallery */}
-      <ProductGallery images={productImages} mainImage={mainImage} setMainImage={setMainImage} />
+    <main>
+      <HeroSection />
+      <TrendingProducts products={trending} onSelect={setSelectedProduct} />
+      <NewCollections products={newCollections} onSelect={setSelectedProduct} />
+      <BestSellers products={bestSellers} onSelect={setSelectedProduct} />
 
-      {/* Right: Product Info + Controls */}
-      <div>
-        <ProductInfo mainImage={mainImage} />
-        <div className="flex flex-col sm:flex-row items-stretch gap-4 mt-4">
-          <QuantityControl quantity={quantity} onDecrease={handleDecrease} onIncrease={handleIncrease} />
-          <AddToCartButton onAddToCart={handleAddToCart} />
-        </div>
-      </div>
+
+      {/* Why Choose Us section */}
+
+
+  <WhyChooseUs />
+      <LatestBlogPosts />
+      {/* Show detailed product page when a product is selected */}
+      {selectedProduct && <ProductPage product={selectedProduct} />}
     </main>
   );
 }
-
-export default Home;

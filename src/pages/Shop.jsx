@@ -1,5 +1,6 @@
 import useProducts from "../hook/useProducts";
 import { useState, useMemo } from "react";
+import ProductItem from "../components/Products/productItem";
 import Sidebar from "../components/Products/Sidebar";
 import Pagination from "../components/Pagination";
 import ProductsGrid from "../components/Products/ProductsGrid";
